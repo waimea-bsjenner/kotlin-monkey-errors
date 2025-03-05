@@ -94,7 +94,234 @@ fun main() {
 }
 
 
+/**
+ * Creates and returns a Mutable List, size NUMCAGES,
+ * populated with strings representing empty cages
+ */
+fun setupCages(): MutableList<String> {
+    val cageList = mutableListOf<String>()
+    for (i in 1..NUMCAGES) cageList.add(EMPTY)
+    return cageList
+}
 
+
+/**
+ * Put a given monkey into the specified cage number (1...MAX)
+ */
+fun placeMonkeyInCage(cageList: MutableList<String>, cageNum: Int, name: String) {
+    println("+++ Putting $name into cage $cageNum")
+    if (cageNum < 1 || cageNum > NUMCAGES) {
+        println("ERROR PLACING MONKEY: cage number ${cageNum + 1} is out of range")
+    }
+
+    else if (name.isNotBlank()) {
+        cageList[cageNum - 1] = name
+    }
+
+    else {
+        println("ERROR PLACING MONKEY: monkey name is blank")
+    }
+}
+
+
+/**
+ * Display a list of all cages in the given list in the format:
+ *
+ * CAGES
+ * - Cage 1: Kevin
+ * - Cage 2: ---
+ * - Cage 3: Samson
+ * - Cage 4: Pam
+ * - Etc.
+ */
+fun listAllCages(cageList: List<String>) {
+    println("CAGES")
+    for ((cageNum, name) in cageList.withIndex()) {
+        println(" - Cage ${cageNum + 1}: $name")
+    }
+}
+
+
+/**
+ * Display a list of all monkeys found in the given cage list:
+ *
+ * MONKEYS
+ * - Kevin
+ * - Samson
+ * - Pam
+ * - Etc.
+ */
+fun listAllMonkeys(cageList: List<String>) {
+    println("MONKEYS")
+    for ((cageNum, name) in cageList.withIndex()) {
+        if (name != "---") {
+            println(" - $name")
+        }
+    }
+}
+
+
+/**
+ * Display a list of all empty cages in the given cage list:
+ *
+ * EMPTY CAGES
+ * - Cage 2
+ * - Cage 7
+ * - Etc.
+ */
+fun listEmptyCages(cageList: List<String>) {
+    println("EMPTY CAGES")
+    for ((cageNum, name) in cageList.withIndex()) {
+        if (name == "---") {
+            println(" - Cage ${cageNum+1}")
+        }
+    }
+}
+
+
+/**
+ * Display a full list of all monkeys and the cages they are in.
+ * The names and cage numbers should line up in neat columns:
+ *
+ * MONKEYS & CAGES
+ * - Kevin  (Cage 1)
+ * - Samson (Cage 3)
+ * - Pam    (Cage 4)
+ * - Etc.
+ *
+ * Tip: the String.padEnd(N) function will help you here
+ */
+fun listAllMonkeysAndCages(cageList: List<String>) {
+    println("MONKEYS & CAGES")
+    for ((cageNum, name) in cageList.withIndex()) {
+        if (name != "---") {
+            println(" - $name (Cage ${cageNum + 1})")
+        }
+    }
+}
+
+
+/**
+ * Returns the number of monkeys found in the given cage list
+ */
+fun monkeyCount(cageList: List<String>): Int {
+    var monkeyNumber = 0
+    for (name in cageList) {
+        if (name != "---") {
+            monkeyNumber++
+        }
+    }
+
+    return monkeyNumber
+}
+
+
+/**
+ * Returns the number of cages that are empty in the given cage list
+ */
+fun emptyCount(cageList: List<String>): Int {
+    var emptyCages = 0
+    for (name in cageList) {
+        if (name == "---") {
+            emptyCages++
+        }
+    }
+
+    return emptyCages
+}
+
+
+/**
+ * Show all cages from the given list, formatted as a horizontal table:
+ *
+ * +--------+--------+--------+--------+----
+ * | Cage 1 | Cage 2 | Cage 3 | Cage 4 | Etc.
+ * +--------+--------+--------+--------+----
+ * | Kevin  | ---    | Samson | Pam    | Etc.
+ * +--------+--------+--------+--------+----
+ *
+ * Tip: the String.padEnd(N) function will help you here
+ */
+fun showMonkeyCages(cageList: List<String>) {
+    //1st row
+    println()
+    for (i in cageList.indices) {
+        print("+--------")
+    }
+    print("+")
+    //2nd row
+    var cageNumber = 1
+    println()
+    for (i in cageList.withIndex()) {
+        print("| Cage $cageNumber ")
+        cageNumber++
+    }
+    print("|")
+    //3rd row
+    println()
+    for (i in cageList.indices) {
+        print("+--------")
+    }
+    print("+")
+    //4th row
+    println()
+    for ((i, cageNum) in cageList.withIndex()) {
+        print("| ${cageNum.padEnd(6, ' ')} ")
+    }
+    print("|")
+    //5th row
+    println()
+    for (i in cageList.indices) {
+        print("+--------")
+    }
+    print("+")
+}
+
+
+/**
+ * Make a given cage empty (if a monkey was in it, it's gone now!)
+ */
+fun clearCage(cageList: MutableList<String>, cageNum: Int) {
+    println("--- Clearing cage $cageNum")
+    if (cageNum < 1 || cageNum > NUMCAGES) {
+        println("ERROR: cage number ${cageNum + 1} is out of range")
+    }
+    else {
+        cageList[cageNum - 1] = "---"
+    }
+}
+
+
+/**
+ * Swap the contents of two given cages.
+ *
+ * If one was full and the other empty, then the monkey just swaps
+ * into the empty cage.
+ */
+fun swapCages(cageList: MutableList<String>, cageNum1: Int, cageNum2: Int) {
+    println("<-> Swapping cages $cageNum1 and $cageNum2")
+    if ((cageNum1 < 1 || cageNum1 > NUMCAGES) || (cageNum2 < 1 || cageNum2 > NUMCAGES)) {
+        println("ERROR: cage number $cageNum1 and/or $cageNum2 is out of range")
+    }
+    else {
+        var swappedMonkey = ""
+        swappedMonkey = cageList[cageNum1 - 1]
+        cageList[cageNum1 - 1] = cageList[cageNum2 - 1]
+        cageList[cageNum2 - 1] = swappedMonkey
+    }
+}
+
+fun getString(prompt: String): String {
+    var userInput: String
+
+    while (true) {
+        print(prompt)
+
+        userInput = readln()
+        if (userInput.isNotBlank()) break
+    }
+    return userInput
+}
 
 
 
